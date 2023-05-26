@@ -59,4 +59,33 @@ describe('Meals routes', () => {
       }),
     ])
   })
+
+  it.only('should be able to list all meals', async () => {
+    await request(app.server)
+      .post('/meals')
+      .send({
+        name: 'Café da Manhã',
+        description: 'Comi uma tapioca e tomei um copo de whey',
+        isDiet: true,
+      })
+      .expect(201)
+
+    const listMealsResponse = await request(app.server)
+      .get('/meals')
+      .expect(200)
+
+    const id = listMealsResponse.body.meals[0].id
+
+    const getMealResponse = await request(app.server)
+      .get(`/meals/${id}`)
+      .expect(200)
+
+    expect(getMealResponse.body.meal).toEqual(
+      expect.objectContaining({
+        name: 'Café da Manhã',
+        description: 'Comi uma tapioca e tomei um copo de whey',
+        isDiet: 1,
+      }),
+    )
+  })
 })
