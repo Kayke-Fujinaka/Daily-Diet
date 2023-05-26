@@ -60,7 +60,7 @@ describe('Meals routes', () => {
     ])
   })
 
-  it.only('should be able to list all meals', async () => {
+  it('should be able to list all meals', async () => {
     await request(app.server)
       .post('/meals')
       .send({
@@ -87,5 +87,26 @@ describe('Meals routes', () => {
         isDiet: 1,
       }),
     )
+  })
+
+  it('should be able to delete a meal', async () => {
+    await request(app.server)
+      .post('/meals')
+      .send({
+        name: 'Café da Manhã',
+        description: 'Comi uma tapioca e tomei um copo de whey',
+        isDiet: true,
+      })
+      .expect(201)
+
+    let listMealsResponse = await request(app.server).get('/meals').expect(200)
+
+    const id = listMealsResponse.body.meals[0].id
+
+    await request(app.server).delete(`/meals/${id}`).expect(204)
+
+    listMealsResponse = await request(app.server).get('/meals').expect(200)
+
+    expect(listMealsResponse.body.meals).toEqual([])
   })
 })
