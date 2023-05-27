@@ -1,6 +1,6 @@
 # RF
 
-- [] Deve ser possível criar um usuário
+- [X] Deve ser possível criar um usuário
 - [X] Deve ser possível registrar uma refeição feita, com as seguintes informações:
     - Nome
     - Descrição
@@ -10,7 +10,7 @@
 - [X] Deve ser possível apagar uma refeição
 - [X] Deve ser possível listar todas as refeições
 - [X] Deve ser possível visualizar uma única refeição
-- [] Deve ser possível recuperar as métricas de um usuário
+- [X] Deve ser possível recuperar as métricas de um usuário
     - Quantidade total de refeições registradas
     - Quantidade total de refeições dentro da dieta
     - Quantidade total de refeições fora da dieta
@@ -18,7 +18,7 @@
 
 # RN
 
-- [] Deve ser possível identificar o usuário entre as requisições
-- [] As refeições devem ser relacionadas a um usuário.
+- [X] Deve ser possível identificar o usuário entre as requisições
+- [X] As refeições devem ser relacionadas a um usuário.
 - [X] As refeições podem estar dentro ou fora da dieta;
-- [] O usuário só pode visualizar, editar e apagar as refeições o qual ele criou
+- [Z] O usuário só pode visualizar, editar e apagar as refeições o qual ele criou

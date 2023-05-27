@@ -165,4 +165,34 @@ describe('Meals routes', () => {
 
     expect(listMealsResponse.body.meals).toEqual([])
   })
+
+  it.only('should be able to delete a meal', async () => {
+    const createMealResponse = await request(app.server)
+      .post('/meals')
+      .send({
+        name: 'Café da Manhã',
+        description: 'Comi uma tapioca e tomei um copo de whey',
+        isDiet: true,
+      })
+      .expect(201)
+
+    const cookies = createMealResponse.get('Set-Cookie')
+
+    const summaryResponse = await request(app.server)
+      .get('/meals/summary')
+      .set('Cookie', cookies)
+      .expect(200)
+
+    expect(summaryResponse.body.summary).toEqual(
+      expect.objectContaining({
+        totalMeals: 1,
+        dietMeals: 1,
+        nonDietMeals: 0,
+        bestDietSequence: {
+          date: expect.any(String),
+          count: 1,
+        },
+      }),
+    )
+  })
 })
