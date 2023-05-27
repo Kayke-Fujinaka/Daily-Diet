@@ -103,4 +103,49 @@ export async function mealsRoutes(app: FastifyInstance) {
       return reply.status(204).send()
     },
   )
+
+  app.get(
+    '/summary',
+    { preHandler: [checkSessionIdExists] },
+    async (request) => {
+      const sessionId = request.cookies.sessionId
+
+      const totalMeals = await knex('meals')
+        .count('id as count')
+        .where('session_id', sessionId)
+        .first()
+      const dietMeals = await knex('meals')
+        .count('id as count')
+        .where('session_id', sessionId)
+        .andWhere('isDiet', true)
+        .first()
+      const nonDietMeals = await knex('meals')
+        .count('id as count')
+        .where('session_id', sessionId)
+        .andWhere('isDiet', false)
+        .first()
+      const bestDietSequence = await knex('meals')
+        .select(
+          knex.raw(
+            "date(created_at, 'start of day') as date, count(id) as count",
+          ),
+        )
+        .where('session_id', sessionId)
+        .andWhere('isDiet', true)
+        .groupByRaw("date(created_at, 'start of day')")
+        .orderBy('count', 'desc')
+        .first()
+
+      const summary = {
+        totalMeals: totalMeals?.count || 0,
+        dietMeals: dietMeals?.count || 0,
+        nonDietMeals: nonDietMeals?.count || 0,
+        bestDietSequence: bestDietSequence || { count: 0, created_at: null },
+      }
+
+      return {
+        summary,
+      }
+    },
+  )
 }
